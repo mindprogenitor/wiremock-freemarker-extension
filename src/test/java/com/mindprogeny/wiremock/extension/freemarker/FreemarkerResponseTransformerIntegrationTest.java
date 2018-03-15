@@ -129,4 +129,32 @@ public class FreemarkerResponseTransformerIntegrationTest {
                .body(hasXPath("/root/test3", equalTo("")));
     }
 
+
+    /**
+     * Test Missing Parameters not breaking the template parameters object
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testMissingParameterTransformation() throws IOException, URISyntaxException {
+        wiremock.stubFor(get(urlPathEqualTo("/test")).willReturn(aResponse()
+                                                  .withStatus(200)
+                                                  .withHeader("content-type", "application/xml")
+                                                  .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/xml-response-stub-with-allways-present-parameters-object.xml").toURI())),StandardCharsets.UTF_8))
+                                                  .withTransformers("freemarker-transformer")));
+        
+        given().port(55080)
+               .when()
+               .get("/test")
+               .then()
+               .body(hasXPath("/root", equalTo("nothing")));
+
+        given().port(55080)
+               .when()
+               .get("/test?test1=what&test2=")
+               .then()
+               .body(hasXPath("/root", equalTo("something")));
+    }
+
 }

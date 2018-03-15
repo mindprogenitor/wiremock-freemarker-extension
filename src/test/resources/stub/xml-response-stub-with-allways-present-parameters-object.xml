@@ -1,0 +1,1 @@
+<root><#list request.parameters?keys>something<#items as a><#break></#items><#else>nothing</#list></root>
