@@ -236,4 +236,27 @@ public class FreemarkerResponseTransformerIntegrationTest {
         
     }
 
+    /**
+     * Test simple xml request parser with multiple sibling tags and usage in response
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testMultipleTagXmlTransformation() throws IOException, URISyntaxException {
+        wiremock.stubFor(post(urlEqualTo("/test-multiple")).willReturn(aResponse()
+                                                           .withStatus(200)
+                                                           .withHeader("content-type", "application/xml")
+                                                           .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/xml-response-stub-for-request-with-sibiling-twin-tags.xml").toURI())),StandardCharsets.UTF_8))
+                                                           .withTransformers("freemarker-transformer")));
+
+        given().port(55080)
+               .contentType("application/xml")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request-with-multiple-sibling-tags.xml").toURI())))
+               .when()
+               .post("/test-multiple")
+               .then()
+               .body(hasXPath("/root/children/name", equalTo("John")));
+    }
+
 }

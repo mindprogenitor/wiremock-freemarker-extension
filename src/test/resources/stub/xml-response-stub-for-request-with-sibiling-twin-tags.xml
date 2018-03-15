@@ -1,0 +1,5 @@
+<root>
+  <children>
+    <name>${root.parent.child[0].value}</name>
+  </children>
+</root>
