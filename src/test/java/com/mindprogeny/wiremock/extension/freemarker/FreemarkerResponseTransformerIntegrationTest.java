@@ -209,4 +209,31 @@ public class FreemarkerResponseTransformerIntegrationTest {
         
     }
 
+    /**
+     * Test xml request parser producing a canonical object with namespaces and usage in response
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testCanonicalNamespacedXmlTransformation() throws IOException, URISyntaxException {
+        wiremock.stubFor(post(urlEqualTo("/test")).willReturn(aResponse()
+                                                  .withStatus(200)
+                                                  .withHeader("content-type", "application/xml")
+                                                  .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/xml-response-stub-with-canonical-namespaced-xml-request.xml").toURI())),StandardCharsets.UTF_8))
+                                                  .withTransformers("freemarker-transformer")
+                                                  .withTransformerParameter("xml-object-type", "canonical")
+                                                  .withTransformerParameter("include-namespaces", "true")));
+
+        given().port(55080)
+               .contentType("application/xml")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request.xml").toURI())))
+               .when()
+               .post("/test")
+               .then()
+               .body(hasXPath("/Envelope/Body/Operation/Response/Report/Action", equalTo("Doing Something")))
+               .body(hasXPath("/Envelope/Body/Operation/Response/Report/LogEntries[4]/Comments/Comment[3]", equalTo("Doing Something")));
+        
+    }
+
 }
