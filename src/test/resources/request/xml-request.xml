@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ns7:SomeHeader xmlns:ns7="http://www.somewhere.io/XMLHeader">
+            <ns7:Version>10</ns7:Version>
+            <ns7:MessageTimestamp>2016-06-20T13:08:58</ns7:MessageTimestamp>
+        </ns7:SomeHeader>
+    </soapenv:Header>
+    <soapenv:Body>
+        <ns5:Operation xmlns:ns5="http://www.somewhere.io/XMLBody">
+            <ns5:Request>
+                <ns5:Code>RTI</ns5:Code>
+                <ns5:Action>Doing Something</ns5:Action>
+                <ns5:StartTime>2018-03-01-00.00.00.000000</ns5:StartTime>
+            </ns5:Request>
+        </ns5:Operation>
+    </soapenv:Body>
+</soapenv:Envelope>
