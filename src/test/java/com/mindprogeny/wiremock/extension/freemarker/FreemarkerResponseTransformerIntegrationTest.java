@@ -71,4 +71,31 @@ public class FreemarkerResponseTransformerIntegrationTest {
                .body(hasXPath("/Envelope/Body/Operation/Response/Report/LogEntries[4]/Comments/Comment[3]", equalTo("Doing Something")));
         
     }
+    
+    /**
+     * Test default detection through unknown type using an xml request
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testDefaultDetectionTransformation() throws IOException, URISyntaxException {
+        wiremock.stubFor(post(urlEqualTo("/test")).willReturn(aResponse()
+                                                  .withStatus(200)
+                                                  .withHeader("content-type", "application/xml")
+                                                  .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/xml-response-stub.xml").toURI())),StandardCharsets.UTF_8))
+                                                  .withTransformers("freemarker-transformer")
+                                                  .withTransformerParameter("input", "unknown")));
+
+        given().port(55080)
+               .contentType("application/xml")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request.xml").toURI())))
+               .when()
+               .post("/test")
+               .then()
+               .body(hasXPath("/Envelope/Body/Operation/Response/Report/Action", equalTo("Doing Something")))
+               .body(hasXPath("/Envelope/Body/Operation/Response/Report/LogEntries[4]/Comments/Comment[3]", equalTo("Doing Something")));
+        
+    }
+
 }
