@@ -98,4 +98,35 @@ public class FreemarkerResponseTransformerIntegrationTest {
         
     }
 
+    /**
+     * Test template using Query Parameters
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testSimpleParameterTransformation() throws IOException, URISyntaxException {
+        wiremock.stubFor(get(urlPathEqualTo("/test")).willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("content-type", "application/xml")
+                .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/xml-response-stub-with-query-parameters.xml").toURI())),StandardCharsets.UTF_8))
+                .withTransformers("freemarker-transformer")));
+
+        given().port(55080)
+               .when()
+               .get("/test?test1=what&test2=")
+               .then()
+               .body(hasXPath("/root/test1", equalTo("what")))
+               .body(hasXPath("/root/test2", equalTo("")))
+               .body(hasXPath("/root/test3", equalTo("null")));
+
+        given().port(55080)
+               .when()
+               .get("/test?test1=what&test2=&test3")
+               .then()
+               .body(hasXPath("/root/test1", equalTo("what")))
+               .body(hasXPath("/root/test2", equalTo("")))
+               .body(hasXPath("/root/test3", equalTo("")));
+    }
+
 }

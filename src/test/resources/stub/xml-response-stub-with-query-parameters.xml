@@ -1,0 +1,5 @@
+<root>
+  <test1>${request.parameters.test1}</test1>
+  <test2>${request.parameters.test2}</test2>
+  <test3><#if request.parameters.test3??>${request.parameters.test3}<#else>null</#if></test3>
+</root>
