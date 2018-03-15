@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header />
+    <soapenv:Body>
+        <ns5:Operation xmlns:ns5="http://www.somewhere.io/XMLBody">
+            <ns5:Response>
+                <ns5:Checksum>0</ns5:Checksum>
+                <ns5:Report>
+                    <ns5:Action>${Envelope[0].Body[0].Operation[0].Request[0].Action[0].value}</ns5:Action>
+                    <ns5:Start>2018-03-01-00.00.00.000100</ns5:Start>
+                    <ns5:End>2018-03-01-00.00.01.000000</ns5:End>
+                    <ns5:LogEntries>
+                        <ns5:Entry>0</ns5:Entry>
+                        <ns5:Timestamp>2018-03-01-00.00.00.000100</ns5:Timestamp>
+                        <ns5:Comments>
+                            <ns5:Comment>Asked someone</ns5:Comment>
+                            <ns5:Comment>Someone replied</ns5:Comment>
+                        </ns5:Comments>
+                    </ns5:LogEntries>
+                    <ns5:LogEntries>
+                        <ns5:Entry>1</ns5:Entry>
+                        <ns5:Timestamp>2018-03-01-00.00.00.100000</ns5:Timestamp>
+                        <ns5:Comments>
+                            <ns5:Comment>Someone Started doing it</ns5:Comment>
+                        </ns5:Comments>
+                    </ns5:LogEntries>
+                    <ns5:LogEntries>
+                        <ns5:Entry>2</ns5:Entry>
+                        <ns5:Timestamp>2018-03-01-00.00.00.800000</ns5:Timestamp>
+                        <ns5:Comments>
+                            <ns5:Comment>Someone Did it</ns5:Comment>
+                        </ns5:Comments>
+                    </ns5:LogEntries>
+                    <ns5:LogEntries>
+                        <ns5:Entry>3</ns5:Entry>
+                        <ns5:Timestamp>2018-03-01-00.00.00.900000</ns5:Timestamp>
+                        <ns5:Comments>
+                            <ns5:Comment>Someone said it was done</ns5:Comment>
+                            <ns5:Comment>We did it</ns5:Comment>
+                            <ns5:Comment>${Envelope[0].Body[0].Operation[0].Request[0].Action[0].value}</ns5:Comment>
+                        </ns5:Comments>
+                    </ns5:LogEntries>
+                </ns5:Report>
+            </ns5:Response>
+        </ns5:Operation>
+    </soapenv:Body>
+</soapenv:Envelope>
