@@ -539,4 +539,31 @@ public class FreemarkerResponseTransformerIntegrationTest {
                 .body("children[0].gender", equalTo("Unknown"));
     }
     
+    /**
+     * Test url request variable
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testUrl() throws Exception {
+        wiremock.stubFor(get(urlPathMatching("/test-url/.*")).willReturn(aResponse()
+                                                             .withStatus(200)
+                                                             .withHeader("content-type", "application/json")
+                                                             .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/json-response-stub-with-url.json").toURI())),StandardCharsets.UTF_8))
+                                                             .withTransformers("freemarker-transformer")));
+        
+        Response response = given().port(55080)
+                                   .when()
+                                   .get("/test-url/something");
+        response.then()
+                .body("url", equalTo("/test-url/something"));
+        
+        response = given().port(55080)
+                          .when()
+                          .get("/test-url/something?else");
+        
+        response.then()
+                .body("url", equalTo("/test-url/something?else"));
+    }
+   
 }
