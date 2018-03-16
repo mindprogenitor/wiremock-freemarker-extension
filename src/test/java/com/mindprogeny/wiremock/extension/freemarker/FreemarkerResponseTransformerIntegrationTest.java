@@ -488,5 +488,29 @@ public class FreemarkerResponseTransformerIntegrationTest {
                .body(equalTo(new String(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request.xml").toURI())),StandardCharsets.UTF_8)));
     }
 
+
+    /**
+     * Test faulty stub definition and usage
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testFaultyStub() throws IOException, URISyntaxException {
+        wiremock.stubFor(post(urlEqualTo("/test")).willReturn(aResponse()
+                                                  .withStatus(200)
+                                                  .withHeader("content-type", "application/xml")
+                                                  .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/xml-response-stub.xml").toURI())),StandardCharsets.UTF_8))
+                                                  .withTransformers("freemarker-transformer")));
+
+        Response response = given().port(55080)
+               .contentType("text/json")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/json-request.json").toURI())))
+               .when()
+               .post("/test");
+        response.then()
+               .statusCode(HttpURLConnection.HTTP_INTERNAL_ERROR);
+
+    }
     
 }
