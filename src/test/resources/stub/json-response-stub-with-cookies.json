@@ -1,0 +1,5 @@
+{ 
+	"a": "${request.cookies.ONE.value}",
+	"b": "${request.cookies.TWO.value}",
+	"c": "${request.cookies["THREE-FOUR"].value}"
+}

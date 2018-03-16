@@ -565,5 +565,28 @@ public class FreemarkerResponseTransformerIntegrationTest {
         response.then()
                 .body("url", equalTo("/test-url/something?else"));
     }
+    
+    /**
+     * Test cookies request variable
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testCookies() throws Exception {
+        wiremock.stubFor(get(urlEqualTo("/test-cookies")).willReturn(aResponse()
+                                                         .withStatus(200)
+                                                         .withHeader("content-type", "application/json")
+                                                         .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/json-response-stub-with-cookies.json").toURI())),StandardCharsets.UTF_8))
+                                                         .withTransformers("freemarker-transformer")));
+        
+        Response response = given().port(55080)
+                                   .header("Cookie", "ONE=1; TWO=2; THREE-FOUR=34")
+                                   .when()
+                                   .get("/test-cookies");
+        response.then()
+                .body("a", equalTo("1"))
+                .body("b", equalTo("2"))
+                .body("c", equalTo("34"));
+    }
    
 }
