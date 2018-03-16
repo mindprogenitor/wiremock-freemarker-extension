@@ -431,5 +431,38 @@ public class FreemarkerResponseTransformerIntegrationTest {
 
     }
 
+    /**
+     * Test forced text input request and usage in response
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testTextRequest() throws IOException, URISyntaxException {
+        // Array as root element is not supported
+        wiremock.stubFor(post(urlEqualTo("/test-text")).willReturn(aResponse()
+                                                       .withStatus(200)
+                                                       .withHeader("content-type", "text/text")
+                                                       .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/text-response-stub-with-no-values").toURI())),StandardCharsets.UTF_8))
+                                                       .withTransformers("freemarker-transformer")
+                                                       .withTransformerParameter("input", "text")));
+
+        given().port(55080)
+               .contentType("application/xml")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request.xml").toURI())))
+               .when()
+               .post("/test-text")
+               .then()
+               .body(equalTo("Text Request"));
+
+        given().port(55080)
+               .contentType("text/json")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/json-request.json").toURI())))
+               .when()
+               .post("/test-text")
+               .then()
+               .body(equalTo("Text Request"));
+    }
+
     
 }
