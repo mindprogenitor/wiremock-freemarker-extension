@@ -464,5 +464,29 @@ public class FreemarkerResponseTransformerIntegrationTest {
                .body(equalTo("Text Request"));
     }
 
+    /**
+     * Test usage of request as text in response with a different attribute name
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testTextRequestWithCustomAttribute() throws IOException, URISyntaxException {
+        wiremock.stubFor(post(urlEqualTo("/test-text")).willReturn(aResponse()
+                                                       .withStatus(200)
+                                                       .withHeader("content-type", "text/text")
+                                                       .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/text-response-stub-with-custom-parameter-name").toURI())),StandardCharsets.UTF_8))
+                                                       .withTransformers("freemarker-transformer")
+                                                       .withTransformerParameter("request-element-name", "input")));
+
+        given().port(55080)
+               .contentType("text/json")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request.xml").toURI())))
+               .when()
+               .post("/test-text")
+               .then()
+               .body(equalTo(new String(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request.xml").toURI())),StandardCharsets.UTF_8)));
+    }
+
     
 }
