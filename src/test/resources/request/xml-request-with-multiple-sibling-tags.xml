@@ -1,0 +1,9 @@
+<root xmlns:ns5="http://www.somewhere.io/XMLRequest" >
+  <ns5:parent>
+    <name>something</name>
+    <child number="1">John</child>
+    <child number="2">Mary</child>
+    <child number="3">Cindy</child>
+    <child number="4">Kyle</child>
+  </ns5:parent>
+</root>

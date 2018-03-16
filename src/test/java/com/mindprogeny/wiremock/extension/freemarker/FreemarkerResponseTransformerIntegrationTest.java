@@ -259,4 +259,28 @@ public class FreemarkerResponseTransformerIntegrationTest {
                .body(hasXPath("/root/children/name", equalTo("John")));
     }
 
+    /**
+     * Test changing the name of the variable used to access the xml tag value
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testTagTextElementNameXmlTransformation() throws IOException, URISyntaxException {
+        wiremock.stubFor(post(urlEqualTo("/test-text-tag")).willReturn(aResponse()
+                                                           .withStatus(200)
+                                                           .withHeader("content-type", "application/xml")
+                                                           .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/xml-response-stub-with-custom-xml-tag-value-name.xml").toURI())),StandardCharsets.UTF_8))
+                                                           .withTransformers("freemarker-transformer")
+                                                           .withTransformerParameter("xml-text-element-name", "content")));
+
+        given().port(55080)
+               .contentType("application/xml")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request-with-multiple-sibling-tags.xml").toURI())))
+               .when()
+               .post("/test-text-tag")
+               .then()
+               .body(hasXPath("/root/children/name", equalTo("John")));
+    }
+
 }
