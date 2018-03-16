@@ -392,6 +392,44 @@ public class FreemarkerResponseTransformerIntegrationTest {
                .then()
                .statusCode(HttpURLConnection.HTTP_BAD_REQUEST);
     }
+    
+    /**
+     * Test forced json input request and usage in response
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testJsonInput() throws IOException, URISyntaxException {
+        wiremock.stubFor(post(urlEqualTo("/test")).willReturn(aResponse()
+                                                  .withStatus(200)
+                                                  .withHeader("content-type", "application/xml")
+                                                  .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/xml-response-stub-to-json-request.xml").toURI())),StandardCharsets.UTF_8))
+                                                  .withTransformers("freemarker-transformer")
+                                                  .withTransformerParameter("input", "json")));
+
+        given().port(55080)
+               .contentType("text/json")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/json-request.json").toURI())))
+               .when()
+               .post("/test")
+               .then()
+               .body(hasXPath("/root/name", equalTo("Joe")))
+               .body(hasXPath("/root/children/child[1]", equalTo("John")))
+               .body(hasXPath("/root/children/child[2]", equalTo("Mary")))
+               .body(hasXPath("/root/parents/parent[1]", equalTo("Joe")))
+               .body(hasXPath("/root/parents/parent[2]", equalTo("Sandra")))
+               .body(hasXPath("/root/car", equalTo("Porsche")));
+
+        given().port(55080)
+               .contentType("application/xml")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request.xml").toURI())))
+               .when()
+               .post("/test")
+               .then()
+               .statusCode(HttpURLConnection.HTTP_BAD_REQUEST);
+
+    }
 
     
 }
