@@ -311,4 +311,53 @@ public class FreemarkerResponseTransformerIntegrationTest {
                .body(hasXPath("/root/car", equalTo("Porsche")));
     }
 
+
+    /**
+     * Test detected text request and usage in response
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testDetectedTextRequest() throws IOException, URISyntaxException {
+        // Array as root element is not supported
+        wiremock.stubFor(post(urlEqualTo("/test-text")).willReturn(aResponse()
+                                                       .withStatus(200)
+                                                       .withHeader("content-type", "text/text")
+                                                       .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/text-response-stub").toURI())),StandardCharsets.UTF_8))
+                                                       .withTransformers("freemarker-transformer")));
+
+        given().port(55080)
+               .contentType("text/json")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/invalid-json-request.json").toURI())))
+               .when()
+               .post("/test-text")
+               .then()
+               .body(equalTo(new String(Files.readAllBytes(Paths.get(getClass().getResource("/request/invalid-json-request.json").toURI())),StandardCharsets.UTF_8)));
+    }
+
+    /**
+     * Test detected xml request and usage as text
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testRequestBodyInResponse() throws IOException, URISyntaxException {
+        // Array as root element is not supported
+        wiremock.stubFor(post(urlEqualTo("/test-text")).willReturn(aResponse()
+                                                       .withStatus(200)
+                                                       .withHeader("content-type", "text/text")
+                                                       .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/text-response-stub").toURI())),StandardCharsets.UTF_8))
+                                                       .withTransformers("freemarker-transformer")));
+
+        given().port(55080)
+               .contentType("text/json")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request.xml").toURI())))
+               .when()
+               .post("/test-text")
+               .then()
+               .body(equalTo(new String(Files.readAllBytes(Paths.get(getClass().getResource("/request/xml-request.xml").toURI())),StandardCharsets.UTF_8)));
+    }
+
 }
