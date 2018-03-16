@@ -1,0 +1,12 @@
+<root>
+    <name>${name}</name>
+    <children>
+        <child>${children[0].name}</child>
+        <child>${children[1].name}</child>
+    </children>
+    <parents>
+        <parent>${parents[0]}</parent>
+        <parent>${parents[1]}</parent>
+    </parents>
+    <car>${car.brand}</car>
+</root>

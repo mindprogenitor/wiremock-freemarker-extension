@@ -283,4 +283,32 @@ public class FreemarkerResponseTransformerIntegrationTest {
                .body(hasXPath("/root/children/name", equalTo("John")));
     }
 
+    /**
+     * Test json request parser and usage in response
+     * 
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testSingleRootJson() throws IOException, URISyntaxException {
+        wiremock.stubFor(post(urlEqualTo("/test-json")).willReturn(aResponse()
+                                                       .withStatus(200)
+                                                       .withHeader("content-type", "application/xml")
+                                                       .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/xml-response-stub-to-json-request.xml").toURI())),StandardCharsets.UTF_8))
+                                                       .withTransformers("freemarker-transformer")));
+
+        given().port(55080)
+               .contentType("text/json")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/json-request.json").toURI())))
+               .when()
+               .post("/test-json")
+               .then()
+               .body(hasXPath("/root/name", equalTo("Joe")))
+               .body(hasXPath("/root/children/child[1]", equalTo("John")))
+               .body(hasXPath("/root/children/child[2]", equalTo("Mary")))
+               .body(hasXPath("/root/parents/parent[1]", equalTo("Joe")))
+               .body(hasXPath("/root/parents/parent[2]", equalTo("Sandra")))
+               .body(hasXPath("/root/car", equalTo("Porsche")));
+    }
+
 }

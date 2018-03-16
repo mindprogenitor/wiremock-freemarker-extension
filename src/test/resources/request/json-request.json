@@ -1,0 +1,10 @@
+{
+	"name" : "Joe",
+	"children" : [
+	   { "name"   : "John",
+		 "gender" : "male" },
+	   { "name"   : "Mary",
+	     "gender" : "female"}],
+	"parents" : ["Joe","Sandra"],
+	"car" : { "brand" : "Porsche" }
+}
