@@ -31,7 +31,9 @@ In order to make the extension available for stub creation, the extension needs 
   To start up a Wiremock Server using a JUnit rule:
   ```java
   @Rule
-  public WireMockRule wiremock = new WireMockRule(WireMockConfiguration.wireMockConfig().port(55080).extensions(new FreemarkerResponseTransformer()));
+  public WireMockRule wiremock = new WireMockRule(WireMockConfiguration.wireMockConfig()
+                                                                       .port(55080)
+                                                                       .extensions(new FreemarkerResponseTransformer()));
   ```
   Where 55080 would be the port where the wiremock server would be listening.
 
@@ -41,6 +43,9 @@ In order to make the extension available for stub creation, the extension needs 
  
   Run wiremock using the following minimal command (feel free to add any additional wiremock specific flags you need):
   ```sh
-  java -cp "wiremock-standalone-2.14.0.jar:wiremock-freemarker-extension-0.0.1.jar" com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --port 8080 --https-port 8443 --extensions com.rabobank.cqc.wiremock.freemarker.extension.FreemarkerResponseTransformer
+  java -cp "wiremock-standalone-2.14.0.jar:wiremock-freemarker-extension-0.0.1.jar" \
+       com.github.tomakehurst.wiremock.standalone.WireMockServerRunner \
+       --port 8080 --https-port 8443 \
+       --extensions com.rabobank.cqc.wiremock.freemarker.extension.FreemarkerResponseTransformer
   ```
 
