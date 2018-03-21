@@ -34,6 +34,10 @@ The Request Object has the following format:
 ```
 The way the Map is constructed varies depending if it's for a json or an xml object.
 
+## Request Object for JSON Requests
+
+For any request parsed as a Json object, the request object will be a map containing an exact representation of the original json request, each attribute accessed hierarchically through a dot notation.
+
 As an example, if the `/test?name=Joe` endpoint had been called with a POST request having the following json body:
 ```json
 { "name" : "Joe",
