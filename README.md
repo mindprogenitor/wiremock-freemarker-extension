@@ -30,10 +30,20 @@ In order to make the extension available for stub creation, the extension needs 
 
   To start up a Wiremock Server using a JUnit rule:
   ```java
+             .
+             .  
+  import org.junit.Rule;
+  import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+  import com.github.tomakehurst.wiremock.junit.WireMockRule;
+  import com.mindprogeny.wiremock.extension.freemarker.FreemarkerResponseTransformer;
+             .
+             .
+
   @Rule
-  public WireMockRule wiremock = new WireMockRule(WireMockConfiguration.wireMockConfig()
-                                                                       .port(55080)
-                                                                       .extensions(new FreemarkerResponseTransformer()));
+  public WireMockRule wiremock = 
+         new WireMockRule(WireMockConfiguration.wireMockConfig()
+                                               .port(55080)
+                                               .extensions(new FreemarkerResponseTransformer()));
   ```
   Where 55080 would be the port where the wiremock server would be listening.
 
