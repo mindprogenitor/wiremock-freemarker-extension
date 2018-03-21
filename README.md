@@ -95,6 +95,73 @@ Calls to endpoints configured with the extension will take the following steps:
 6. Extension returns processed template as the response body.
 7. Wiremock returns response to calling agent.
 
-In this simple example, regardless of the request contents, the response is a simple xml object with a date tage containing the timestamp of the response generation.
+In this simple example, regardless of the request contents, the response is a simple xml object with a date tag containing the timestamp of the response generation.
 
+## The Request Object
 
+The request is processed by the extension and transformed into a map which is made available to the template.
+
+The Request Object has the following format:
+
+```
+.-> request
+|     |-> body                     - The original request body. May be null if request has no content.
+|     |-> url                      - The endpoint, with parameters, used to access the stub
+|     |-> cookies                  - attribute containing all cookies received. May be null if no cookies.
+|     |     |-> <cookie name_1>    - Each cookie value can be directly accessed by name
+|     |     |-> <cookie name_2>
+|     |     |       ..
+|     |     \-> <cookie name_n>
+|     \-> parameters               - Query parameters received. May be null if no query parameters present.
+|           |-> <parameter name_1> - Each query parameter value can be accessed directly by name
+|           |-> <parameter name_2>
+|           |       ..
+|           \-> <parameter name_n>
+|
+|   If the request body is either an xml or a json object, all other variable names are inferred by the
+|   original tag or attribute names, and sub attributes and tags may be accessed through a hierarchical
+|   dot notation according the original request structure. Variables may be arrays if they refer to arrays or
+|   lists in the original request.
+|
+|-> <request attribute/tag>
+|     |-> <request attribute/tag>
+|     |      ..
+|     \-> <request attribute/tag>
+|-> <request attribute/tag>
+|       ..
+\-> <request attribute/tag>
+```
+As an example, if the `/test?name=Joe` endpoint had been called with a POST request having the following body:
+```json
+{ "name" : "Joe",
+  "children" : [
+    { "name"   : "John",
+      "gender" : "male" },
+    { "name"   : "Mary",
+      "gender" : "female"}],
+  "parents" : ["Joe","Sandra"],
+  "car" : { "brand" : "Porsche" }
+}
+```
+The following variables would be available:
+
+Variable | Value
+-------- | -----
+request.body | _The original Json Object_
+request.url | '/test?name=Joe'
+request.parameters | _map of query parameters_
+request.parameters.name | 'Joe'
+request.cookies | _null_
+name | 'Joe'
+children | _array with children objects_
+children[0] | _First child object_
+children[0].name | 'John'
+children[0].gender | 'male'
+children[1] | _Second child object_
+children[1].name | 'Mary'
+children[1].gender | 'female'
+parents | _Array of Parent names_
+parents[0] | 'Joe'
+parents[1] | 'Sandra'
+car | _car object_
+car.brand | 'Porsche'
