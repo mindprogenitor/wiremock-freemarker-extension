@@ -58,4 +58,43 @@ In order to make the extension available for stub creation, the extension needs 
        --port 8080 --https-port 8443 \
        --extensions com.rabobank.cqc.wiremock.freemarker.extension.FreemarkerResponseTransformer
   ```
+## How to use it
+You may use wiremock as normal, except that you may define the body of your stub as a freemarker template, associate the stub with the freemarker extension and the extension will transform the stub body with freemarker before returning it to the requesting agent.
+
+For example:
+```java
+wiremock.stubFor(get(urlEqualTo("/test"))
+        .willReturn(aResponse().withStatus(200)
+                               .withHeader("content-type", "application/xml")
+                               .withBody("<root><date>${.now}</date></root>")
+                               .withTransformers("freemarker-transformer")));
+```
+Or through the REST API:
+```json
+{
+  "request": {
+    "url": "/test",
+    "method": "GET" },
+  "response": {
+    "status": 200,
+    "body": "<root><date>${.now}</date></root>",
+    "headers": {
+    "Content-Type": "application/xml" },
+    "transformers": ["freemarker-transformer"] }
+}
+```
+Calls to endpoints configured with the extension will take the following steps:
+
+![Freemarker Extension Processing flow](doc/image/flow.png "Flow") 
+
+1. Request for `/test` is received
+2. Wiremock finds configured matching stub and identifies it as using the freemarker transformer.
+3. The extension is called with the stubbed response as well as the received request
+4. Extension parses the request and creates a request object to be used as a variable in the freemarker template.
+5. Freemarker template is called using the stub body as the template and the request object as a variable.
+6. Extension returns processed template as the response body.
+7. Wiremock returns response to calling agent.
+
+In this simple example, regardless of the request contents, the response is a simple xml object with a date tage containing the timestamp of the response generation.
+
 
