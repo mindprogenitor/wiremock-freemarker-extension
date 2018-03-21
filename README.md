@@ -118,50 +118,15 @@ The Request Object has the following format:
 |           |       ..
 |           \-> <parameter name_n>
 |
-|   If the request body is either an xml or a json object, all other variable names are inferred by the
-|   original tag or attribute names, and sub attributes and tags may be accessed through a hierarchical
-|   dot notation according the original request structure. Variables may be arrays if they refer to arrays or
-|   lists in the original request.
+|   If the request body is either an xml or a json object, the request object is filled with additional map entries
+|   taking values from the xml or json objects.
 |
 |-> <request attribute/tag>
-|     |-> <request attribute/tag>
-|     |      ..
-|     \-> <request attribute/tag>
 |-> <request attribute/tag>
 |       ..
 \-> <request attribute/tag>
 ```
-As an example, if the `/test?name=Joe` endpoint had been called with a POST request having the following body:
-```json
-{ "name" : "Joe",
-  "children" : [
-    { "name"   : "John",
-      "gender" : "male" },
-    { "name"   : "Mary",
-      "gender" : "female"}],
-  "parents" : ["Joe","Sandra"],
-  "car" : { "brand" : "Porsche" }
-}
-```
-The following variables would be available:
 
-Variable | Value
--------- | -----
-request.body | _The original Json Object_
-request.url | '/test?name=Joe'
-request.parameters | _map of query parameters_
-request.parameters.name | 'Joe'
-request.cookies | _null_
-name | 'Joe'
-children | _array with children objects_
-children[0] | _First child object_
-children[0].name | 'John'
-children[0].gender | 'male'
-children[1] | _Second child object_
-children[1].name | 'Mary'
-children[1].gender | 'female'
-parents | _Array of Parent names_
-parents[0] | 'Joe'
-parents[1] | 'Sandra'
-car | _car object_
-car.brand | 'Porsche'
+The variable structure made available in the request object is dependent on the kind of object present in the request.
+
+Refer to the [Request Object Documentation](doc/RequestObject.md) for more information.
