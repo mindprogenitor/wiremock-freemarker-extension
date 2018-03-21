@@ -124,4 +124,36 @@ If a template is defined for xml requests, for example, and the request is sent 
 
 Using specific input types will allow discerning between a bad or unexpected request type and problems with the template itself.
 
+## Overriding the request variable name
 
+If working with json or xml objects with conflicting root element names (first level tags or attributes called "request") the request can be made available to the template with another request variable name to avoid conflicts and having the request object overwriting the original request variables.
+
+To change the tag content attribute name:
+
+```
+wiremock.stubFor(get(urlEqualTo("/test")).willReturn(aResponse()
+                                         .withStatus(200)
+                                         .withHeader("content-type", "text/text")
+                                         .withBody("${input.body}")
+                                         .withTransformers("freemarker-transformer")
+                                         .withTransformerParameter("request-element-name", "input")));
+```
+And using the REST API:
+
+```json
+{
+  "request": {
+    "url": "/test",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "body": "${input.body}",
+    "headers": { "Content-Type": "application/xml" },
+    "transformers": [ "freemarker-transformer" ],
+    "transformerParameters": {"request-element-name": "input"}
+  }
+}
+```
+
+As seen in the example stub where the variable name is renamed to `input` instead of the default `request`), the original request body would be accessed through `input.body` instead of `request.body`.
