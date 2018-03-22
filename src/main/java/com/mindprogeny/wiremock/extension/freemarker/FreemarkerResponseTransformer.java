@@ -17,6 +17,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.SAXParserFactory;
 
@@ -136,6 +138,21 @@ public class FreemarkerResponseTransformer extends ResponseDefinitionTransformer
     private static final String REQUEST_COOKIES_NAME = "cookies";
     
     /**
+     * Name of the optional variable set(s) to use with the template
+     */
+    private static final String VARIABLE_SET = "variable-set";
+
+    /**
+     * Source of what will be used from the request to search for a key (url,header,body)
+     */
+    private static final String VARIABLE_KEY_SOURCE = "variable-key-source";
+    
+    /**
+     * Matching rule to apply
+     */
+    private static final String VARIABLE_KEY_MATCHING_RULE = "variable-key-matches";
+        
+    /**
      * Object Mapper to parse json requests
      */
     private ObjectMapper jsonMapper = new ObjectMapper();
@@ -205,7 +222,8 @@ public class FreemarkerResponseTransformer extends ResponseDefinitionTransformer
      *      com.github.tomakehurst.wiremock.http.ResponseDefinition, com.github.tomakehurst.wiremock.common.FileSource,
      *      com.github.tomakehurst.wiremock.extension.Parameters)
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public ResponseDefinition transform(Request request, ResponseDefinition responseDefinition, FileSource files, Parameters parameters) {
 
         // Let's first see if the stub has any kind of body defined. if not let's just return the configured response as is
@@ -231,6 +249,8 @@ public class FreemarkerResponseTransformer extends ResponseDefinitionTransformer
         }
         
         String template = getStubTemplate(responseDefinition, files);
+        
+        requestObject.put("var", getVariables(request,parameters));
 
         try {
             return ResponseDefinitionBuilder.like(responseDefinition)
@@ -421,6 +441,42 @@ public class FreemarkerResponseTransformer extends ResponseDefinitionTransformer
     @SuppressWarnings("rawtypes")
     private Map parseJson(String request) throws IOException {
         return jsonMapper.readValue(request, Map.class);
+    }
+
+    /**
+     * Retrieve any variables that should be made available in the template
+     * 
+     * @param request the request object
+     * @param parameters all the stub parameters
+     * @return the set of variables to be added to the request object or null if no variables were requested
+     */
+    @SuppressWarnings("unchecked")
+    private Object getVariables(Request request, Parameters parameters) {
+        // check if we should use a variable set
+        String variableSetName = parameters == null ? null : (String) parameters.get(VARIABLE_SET);
+        if (variableSetName != null) {
+            Map<String,Object> variableSet = FreemarkerVariableRepository.getVariableSet(variableSetName);
+            String variableKeySource = (String) parameters.get(VARIABLE_KEY_SOURCE);
+            if (variableKeySource != null) {
+                String variableKeyMatchPattern = parameters.getString(VARIABLE_KEY_MATCHING_RULE);
+                Pattern keyMatchPattern = Pattern.compile(variableKeyMatchPattern);
+                Matcher keyMatcher = null;
+                switch (variableKeySource) {
+                case "url" : keyMatcher = keyMatchPattern.matcher(request.getUrl()); break;
+                case "headers" : StringBuffer buffer = new StringBuffer();
+                                 request.getHeaders().all().forEach(x -> buffer.append(x.toString()));
+                                 keyMatchPattern.matcher(buffer.toString());
+                                 break;
+                case "body" : keyMatcher = keyMatchPattern.matcher(request.getBodyAsString()); break;
+                }
+                if (keyMatcher.matches()) {
+                    variableSet = (Map<String, Object>) variableSet.get(keyMatcher.group(1));
+                }
+            }
+            return variableSet;
+        }
+        
+        return null;
     }
 
 }

@@ -44,7 +44,8 @@ public class FreemarkerResponseTransformerIntegrationTest {
     @Rule
     public WireMockRule wiremock = new WireMockRule(WireMockConfiguration.wireMockConfig()
                                                                          .port(55080)
-                                                                         .extensions(new FreemarkerResponseTransformer()));
+                                                                         .extensions(new FreemarkerResponseTransformer())
+                                                                         .extensions(new FreemarkerVariableRepositoryManager()));
 
     /**
      * Test simple xml request parser and usage in response
@@ -587,5 +588,38 @@ public class FreemarkerResponseTransformerIntegrationTest {
                 .body("b", equalTo("2"))
                 .body("c", equalTo("34"));
     }
-   
+
+    @Test
+    public void testVariables() throws Exception {
+        wiremock.stubFor(get(urlPathMatching("/test-var/.*")).willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("content-type", "application/json")
+                .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/json-response-stub-with-variables.json").toURI())),StandardCharsets.UTF_8))
+                .withTransformers("freemarker-transformer")
+                .withTransformerParameter("variable-set", "test")
+                .withTransformerParameter("variable-key-source", "url")
+                .withTransformerParameter("variable-key-matches", "/test-var/(.*)")));
+
+        given().port(55080)
+               .contentType("application/json")
+               .body(Files.readAllBytes(Paths.get(getClass().getResource("/variables.json").toURI())))
+               .when()
+               .post("/__admin/variables");
+        
+        Response response = given().port(55080)
+                .contentType("application/json")
+                .when()
+                .get("/test-var/uno");
+        response.then().body("name", equalTo("miguel"))
+                       .body("profession", equalTo("matador"));
+
+        given().port(55080)
+               .contentType("application/json")
+               .when()
+               .get("/test-var/dos")
+               .then()
+               .body("name", equalTo("manuel"))
+               .body("profession", equalTo("matado"));
+    }
+
 }
