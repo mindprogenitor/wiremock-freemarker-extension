@@ -1,8 +1,8 @@
-/**
- * CanonicalXmlObjectBuilder.java, 22 aug. 2016
- * Created by Joao Viegas (Joao.Nascimento@rabobank.nl)
+/*
+ * CanonicalXmlObjectBuilder.java, 14 Mar 2018
+ * Created by Joao Viegas (joao.viegas@mindprogeny.com)
  *
- * Copyright (c)2016, Rabobank Nederland & affiliates.
+ * Copyright (c) 2018 Mind Progeny.
  */
 package com.mindprogeny.wiremock.extension.freemarker.objectbuilder;
 
@@ -18,8 +18,9 @@ import org.xml.sax.Attributes;
  * both attributes and child tags are placed in namesake collections (even if with just one element) of maps where
  * attribute values can be accessed the same way as tag content.
  * 
- * @author Jo&atilde;o Viegas
- * @since 22 aug. 2016
+ * @author Jo&atilde;o Viegas (joao.viegas@mindprogeny.com)
+ * @since 22 Mar 2018
+ *
  */
 public class CanonicalXmlObjectBuilder extends XmlObjectBuilder {
 

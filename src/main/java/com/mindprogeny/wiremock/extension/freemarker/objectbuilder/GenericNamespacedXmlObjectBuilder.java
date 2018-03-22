@@ -1,8 +1,8 @@
-/**
- * GenericNamespacedXmlObjectBuilder.java, 22 aug. 2016
- * Created by Joao Viegas (Joao.Nascimento@rabobank.nl)
+/*
+ * GenericNamespacedXmlObjectBuilder.java, 14 Mar 2018
+ * Created by Joao Viegas (joao.viegas@mindprogeny.com)
  *
- * Copyright (c)2016, Rabobank Nederland & affiliates.
+ * Copyright (c) 2018 Mind Progeny.
  */
 package com.mindprogeny.wiremock.extension.freemarker.objectbuilder;
 
@@ -16,12 +16,13 @@ import org.xml.sax.Attributes;
  * Generic XML Map Object builder where collections of homonymous child tags are represented as a collection of maps, a
  * single child tag as a map, attributes as strings and the content of the tag as a sting with the attribute given in
  * the constructor.
- * 
+ * <br>
  * Attribute names and tag names with namespaces will have the namespace name prefixed to the name with an underscore
  * ('_') separating both and are considered distinct from homonymous tags and attributes having the same name
  * 
- * @author Jo&atilde;o Viegas
- * @since 22 aug. 2016
+ * @author Jo&atilde;o Viegas (joao.viegas@mindprogeny.com)
+ * @since 22 Mar 2018
+ *
  */
 public class GenericNamespacedXmlObjectBuilder extends XmlObjectBuilder {
 

@@ -1,8 +1,8 @@
-/**
- * GenericXmlObjectBuilder.java, 18 aug. 2016
- * Created by Joao Viegas (Joao.Nascimento@rabobank.nl)
+/*
+ * GenericXmlObjectBuilder.java, 14 Mar 2018
+ * Created by Joao Viegas (joao.viegas@mindprogeny.com)
  *
- * Copyright (c)2016, Rabobank Nederland & affiliates.
+ * Copyright (c) 2018 Mind Progeny.
  */
 package com.mindprogeny.wiremock.extension.freemarker.objectbuilder;
 
@@ -17,8 +17,9 @@ import org.xml.sax.Attributes;
  * single child tag as a map, attributes as strings and the content of the tag as a sting with the attribute given in
  * the constructor.
  * 
- * @author Jo&atilde;o Viegas
- * @since 18 aug. 2016
+ * @author Jo&atilde;o Viegas (joao.viegas@mindprogeny.com)
+ * @since 22 Mar 2018
+ *
  */
 public class GenericXmlObjectBuilder extends XmlObjectBuilder {
 
