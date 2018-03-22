@@ -32,7 +32,7 @@ The Request Object has the following format:
 |       ..
 \-> <request attribute/tag>
 ```
-The way the Map is constructed varies depending if it's for a json or an xml object.
+The way the Map is constructed varies depending if it's for a json or an [xml](XmlRequestObject.md) object.
 
 ## Request Object for JSON Requests
 
@@ -72,6 +72,12 @@ parents[0] | 'Joe'
 parents[1] | 'Sandra'
 car | _car object_
 car.brand | 'Porsche'
+
+## Request Object for XML Requests
+
+XML Request can result into potentially much more complex objects due to the existence of tag attributes, namespaces and lists of tags. Some options were added to support more complex request objects.
+
+Please refer to the [XML Request Object Documentation](XmlRequestObject.md).
 
 ## Configuring the Request Object Type
 
