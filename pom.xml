@@ -3,7 +3,7 @@
 
 	<groupId>com.mindprogeny.wiremock.extension</groupId>
 	<artifactId>wiremock-freemarker-extension</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Wiremock Extension to use dynamic stubs using freemarker templates</description>
@@ -20,7 +20,7 @@
 		<connection>scm:git:git@github.com:mindprogenitor/wiremock-freemarker-extension.git</connection>
 		<developerConnection>scm:git:git@github.com:mindprogenitor/wiremock-freemarker-extension.git</developerConnection>
 		<url>http://github.com/mindprogenitor/wiremock-freemarker-extension</url>
-		<tag>0.0.2</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
