@@ -53,12 +53,14 @@ In order to make the extension available for stub creation, the extension needs 
  
   Run wiremock using the following minimal command (feel free to add any additional wiremock specific flags you need):
   ```sh
-  java -cp "wiremock-standalone-2.14.0.jar:wiremock-freemarker-extension-0.0.1.jar" \
+  java -cp "wiremock-standalone-2.14.0.jar:wiremock-freemarker-extension-0.0.2.jar" \
        com.github.tomakehurst.wiremock.standalone.WireMockServerRunner \
        --port 8080 --https-port 8443 \
-       --extensions com.rabobank.cqc.wiremock.freemarker.extension.FreemarkerResponseTransformer
+       --extensions com.mindprogeny.wiremock.extension.freemarker.FreemarkerResponseTransformer
   ```
+  
 ## How to use it
+
 You may use wiremock as normal, except that you may define the body of your stub as a freemarker template, associate the stub with the freemarker extension and the extension will transform the stub body with freemarker before returning it to the requesting agent.
 
 For example:
@@ -130,3 +132,9 @@ The Request Object has the following format:
 The variable structure made available in the request object is dependent on the kind of object present in the request.
 
 Refer to the [Request Object Documentation](doc/RequestObject.md) for more information.
+
+## Using Variables for dynamic stubbing
+
+The Extension also allows you to create variable sets which can be used in templates allowing for dynamic stub generation (using part of the request to choose a set of variables to use) or simplified templates (for example, using loops to generate repetitive blocks).
+
+Refer to the [dynamic templates documentation](doc/DynamicTemplates.md) for additional information.
