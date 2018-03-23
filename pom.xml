@@ -4,7 +4,7 @@
 
 	<groupId>com.mindprogeny.wiremock.extension</groupId>
 	<artifactId>wiremock-freemarker-extension</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Wiremock Extension to use dynamic stubs using freemarker templates</description>
@@ -21,6 +21,7 @@
 		<connection>scm:git:git@github.com:mindprogenitor/wiremock-freemarker-extension.git</connection>
 		<developerConnection>scm:git:git@github.com:mindprogenitor/wiremock-freemarker-extension.git</developerConnection>
 		<url>http://github.com/mindprogenitor/wiremock-freemarker-extension</url>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
@@ -65,11 +66,11 @@
 			<version>${wiremock.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
- 			<groupId>com.fasterxml.jackson.core</groupId>
- 			<artifactId>jackson-databind</artifactId>
- 			<version>${jackson.version}</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 
 		<dependency>
@@ -183,6 +184,17 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-release-plugin</artifactId>
+						<version>2.4.2</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.scm</groupId>
+								<artifactId>maven-scm-provider-gitexe</artifactId>
+								<version>1.8.1</version>
+							</dependency>
+						</dependencies>
 					</plugin>
 				</plugins>
 			</build>
