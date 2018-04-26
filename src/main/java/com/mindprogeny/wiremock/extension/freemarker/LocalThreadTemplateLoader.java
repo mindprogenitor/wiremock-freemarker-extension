@@ -33,6 +33,9 @@ import freemarker.cache.TemplateLoader;
  */
 public class LocalThreadTemplateLoader implements TemplateLoader {
     
+	/**
+	 * The stub template stored at the thread scope
+	 */
     private ThreadLocal<String> localTemplate = new ThreadLocal<>();
 
     /**
@@ -70,7 +73,7 @@ public class LocalThreadTemplateLoader implements TemplateLoader {
 
     /**
      * Set the local thread template to load if required
-     * @param template
+     * @param template the template to store in the thread
      */
     public void setLocalTemplate(String template) {
         localTemplate.set(template);

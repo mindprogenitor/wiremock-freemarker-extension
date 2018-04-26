@@ -39,7 +39,7 @@ import org.xml.sax.Attributes;
 public class GenericNamespacedXmlObjectBuilder extends XmlObjectBuilder {
 
     /**
-     * 
+     * @param textElementName The variable name to use to access the tag content when available
      */
     public GenericNamespacedXmlObjectBuilder(String textElementName) {
         super(textElementName);

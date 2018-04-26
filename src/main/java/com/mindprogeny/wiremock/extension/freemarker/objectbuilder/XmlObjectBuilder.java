@@ -60,6 +60,9 @@ public abstract class XmlObjectBuilder implements ContentHandler {
      */
     private LinkedList<Map<String, Object>> stack = new LinkedList<>();
 
+    /**
+     * @param textElementName The variable name to use to access the tag content when available
+     */
     public XmlObjectBuilder(String textElementName) {
         this.textElementName = textElementName;
     }
@@ -187,7 +190,8 @@ public abstract class XmlObjectBuilder implements ContentHandler {
     }
 
     /**
-     * @return
+     * Gets a map representing the parsed XML object
+     * @return the XML object map according to the specific builder used.
      */
     public Map<String, ?> getObject() {
         return object;

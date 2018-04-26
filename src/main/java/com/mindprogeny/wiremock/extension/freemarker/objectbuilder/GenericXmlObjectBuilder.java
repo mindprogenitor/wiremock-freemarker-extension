@@ -36,7 +36,7 @@ import org.xml.sax.Attributes;
 public class GenericXmlObjectBuilder extends XmlObjectBuilder {
 
     /**
-     * 
+     * @param textElementName The variable name to use to access the tag content when available
      */
     public GenericXmlObjectBuilder(String textElementName) {
         super(textElementName);

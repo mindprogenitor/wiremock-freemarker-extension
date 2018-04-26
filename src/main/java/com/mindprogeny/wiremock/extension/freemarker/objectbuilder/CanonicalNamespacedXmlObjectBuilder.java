@@ -38,10 +38,13 @@ import org.xml.sax.Attributes;
  */
 public class CanonicalNamespacedXmlObjectBuilder extends XmlObjectBuilder {
 
+	/**
+	 * Variable name of the tag content
+	 */
     private String textElementName;
 
     /**
-     * 
+     * @param textElementName The variable name to use to access the tag content when available
      */
     public CanonicalNamespacedXmlObjectBuilder(String textElementName) {
         super(textElementName);
