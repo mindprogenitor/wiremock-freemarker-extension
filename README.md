@@ -4,7 +4,7 @@ Wiremock Freemarker Extension is a [Wiremock](https://www.wiremock.org) extensio
 
 # NOTICE:
 
-This extension was created initially for wiremock version 2.4.1 when it wasn't distributed with any response template mechanism. Handlebars was added to wiremock version 2.5, and this library was updated to continue using stubs that had already been created to use with freemarker.
+This extension was created initially for wiremock version 2.4.1 when it wasn't distributed with any response template mechanism (A similar extension was developed then under a proprietary license and recreated independently for open source maintenance). Handlebars was added to wiremock version 2.5, and this library was updated to continue using stubs that had already been created to use with freemarker.
 
 Maintenance of this library is now limited as wiremock now provides a template mechanism out of the box.
 
