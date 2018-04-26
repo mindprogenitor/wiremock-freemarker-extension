@@ -2,6 +2,12 @@
 
 Wiremock Freemarker Extension is a [Wiremock](https://www.wiremock.org) extension that allows the use of the [Freemarker](https://freemarker.apache.org) template engine by using the stub body as a freemarker template and making the request available to be used in the template as variables (if the request is either a valid xml or json object, it will be parsed and the values may be referenced directly in the template).
 
+# NOTICE:
+
+This extension was created initially for wiremock version 2.4.1 when it wasn't distributed with any response template mechanism. Handlebars was added to wiremock version 2.5, and this library was updated to continue using stubs that had already been created to use with freemarker.
+
+Maintenance of this library is now limited as wiremock now provides a template mechanism out of the box.
+
 ## How to set it up
 Wiremock can run both as a standalone mock server or as a unit test server instance, as explained in the [Wiremock documentation](https://www.wiremock.org/docs). 
 
