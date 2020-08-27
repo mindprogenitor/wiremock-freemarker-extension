@@ -3,7 +3,7 @@
 
 	<groupId>com.mindprogeny.wiremock.extension</groupId>
 	<artifactId>wiremock-freemarker-extension</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	
 	<parent>
 		<groupId>com.mindprogeny.common</groupId>
