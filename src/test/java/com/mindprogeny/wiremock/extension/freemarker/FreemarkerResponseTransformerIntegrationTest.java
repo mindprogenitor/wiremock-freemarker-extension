@@ -527,28 +527,54 @@ public class FreemarkerResponseTransformerIntegrationTest {
 
     /**
      * Test json request parser and usage in json response
-     * 
+     *
      * @throws IOException
      * @throws URISyntaxException
      */
     @Test
     public void testSimpleJson() throws IOException, URISyntaxException {
         wiremock.stubFor(post(urlEqualTo("/test-json")).willReturn(aResponse()
-                                                       .withStatus(200)
-                                                       .withHeader("content-type", "application/json")
-                                                       .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/json-response-stub.json").toURI())),StandardCharsets.UTF_8))
-                                                       .withTransformers("freemarker-transformer")));
+            .withStatus(200)
+            .withHeader("content-type", "application/json")
+            .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/json-response-stub.json").toURI())),StandardCharsets.UTF_8))
+            .withTransformers("freemarker-transformer")));
 
         Response response = given().port(55080)
-               .contentType("text/json")
-               .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/json-request.json").toURI())))
-               .when()
-               .post("/test-json");
+            .contentType("text/json")
+            .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/json-request.json").toURI())))
+            .when()
+            .post("/test-json");
         response.then()
-                .body("name", equalTo("Joe"))
-                .body("spouse", equalTo("Sandra"))
-                .body("children[0].name", equalTo("Joe"))
-                .body("children[0].gender", equalTo("Unknown"));
+            .body("name", equalTo("Joe"))
+            .body("spouse", equalTo("Sandra"))
+            .body("children[0].name", equalTo("Joe"))
+            .body("children[0].gender", equalTo("Unknown"));
+    }
+
+    /**
+     * Test json request parser and usage in json response
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testArrayJson() throws IOException, URISyntaxException {
+        wiremock.stubFor(post(urlEqualTo("/test-json")).willReturn(aResponse()
+            .withStatus(200)
+            .withHeader("content-type", "application/json")
+            .withBody(new String(Files.readAllBytes(Paths.get(getClass().getResource("/stub/json-array-response-stub.json").toURI())),StandardCharsets.UTF_8))
+            .withTransformers("freemarker-transformer")));
+
+        Response response = given().port(55080)
+            .contentType("text/json")
+            .body(Files.readAllBytes(Paths.get(getClass().getResource("/request/json-array-request.json").toURI())))
+            .when()
+            .post("/test-json");
+        response.then()
+            .body("name", equalTo("Joe"))
+            .body("spouse", equalTo("Sandra"))
+            .body("children[0].name", equalTo("Joe"))
+            .body("children[0].gender", equalTo("Unknown"));
     }
     
     /**

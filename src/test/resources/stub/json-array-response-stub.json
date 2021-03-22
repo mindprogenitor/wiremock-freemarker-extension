@@ -1,0 +1,7 @@
+{
+	"name" : "${root[0].parents[0]}",
+	"spouse" : "${root[0].parents[1]}",
+	"children" : [
+	   { "name"   : "${root[0].name}",
+		 "gender" : "<#if root[0].gender??>${root[0].gender}<#else>Unknown</#if>" }]
+}

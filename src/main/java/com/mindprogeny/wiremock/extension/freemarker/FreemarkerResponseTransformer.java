@@ -18,26 +18,6 @@
  */
 package com.mindprogeny.wiremock.extension.freemarker;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.common.BinaryFile;
@@ -51,9 +31,29 @@ import com.mindprogeny.wiremock.extension.freemarker.objectbuilder.CanonicalXmlO
 import com.mindprogeny.wiremock.extension.freemarker.objectbuilder.GenericNamespacedXmlObjectBuilder;
 import com.mindprogeny.wiremock.extension.freemarker.objectbuilder.GenericXmlObjectBuilder;
 import com.mindprogeny.wiremock.extension.freemarker.objectbuilder.XmlObjectBuilder;
-
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Wiremock Extension to transform request body into a map object and make it available to use in the response as a freemarker template
@@ -450,8 +450,14 @@ public class FreemarkerResponseTransformer extends ResponseDefinitionTransformer
      * @return the parsed request
      * @throws IOException if errors occur reading and parsing the json file
      */
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private Map parseJson(String request) throws IOException {
+        if (request.trim().startsWith("[")) {
+            List list = jsonMapper.readValue(request, List.class);
+            Map map = new HashMap();
+            map.put("root", list);
+            return map;
+        }
         return jsonMapper.readValue(request, Map.class);
     }
 
